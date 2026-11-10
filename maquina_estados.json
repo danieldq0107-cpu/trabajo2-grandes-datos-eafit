@@ -1,0 +1,40 @@
+{
+  "Comment": "Trabajo 2 - Parte A: job inicial y dos ramas en paralelo",
+  "StartAt": "Glue_Limpieza_Join",
+  "States": {
+    "Glue_Limpieza_Join": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": { "JobName": "t2-limpieza-join" },
+      "Next": "Ramas_en_Paralelo"
+    },
+    "Ramas_en_Paralelo": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "Rama1_Aerolinea_Mes",
+          "States": {
+            "Rama1_Aerolinea_Mes": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": { "JobName": "t2-rama1-aerolinea-mes" },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "Rama2_Aeropuerto_Franja",
+          "States": {
+            "Rama2_Aeropuerto_Franja": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::glue:startJobRun.sync",
+              "Parameters": { "JobName": "t2-rama2-aeropuerto-franja" },
+              "End": true
+            }
+          }
+        }
+      ],
+      "End": true
+    }
+  }
+}
